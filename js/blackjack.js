@@ -19,7 +19,7 @@ const dLabel = makeLabel(stage, [-1.6, 0.05, -1.45]);
 const $ = id => document.getElementById(id);
 const inPhase = p => document.body.dataset.phase === p; // ignore clicks that race an animation
 
-let shoe = newShoe(6), bet = 0, baseBet = 0, betStack = null, extras = [];
+let shoe = newShoe(6), bet = 0, baseBet = 0, chips = [], baseChips = [], betStack = null, extras = [];
 let hands = { p: [], d: [] }, meshes = { p: [], d: [] }, holeHidden = false;
 
 const draw = () => {
@@ -28,7 +28,7 @@ const draw = () => {
 };
 function showBet() {
   if (betStack) scene.remove(betStack);
-  betStack = chipStack(bet); betStack.position.set(...BET_AT); scene.add(betStack);
+  betStack = chipStack(chips); betStack.position.set(...BET_AT); scene.add(betStack);
   $('bet').textContent = fmt(bet);
 }
 function labels() {
@@ -49,15 +49,15 @@ async function give(who, faceUp = true) {
 
 chipBar($('chips'), v => {
   if (bet + v > wallet.get()) return toast('เครดิตไม่พอ', 'lose');
-  bet += v; showBet();
+  chips.push(v); bet += v; showBet();
 });
-$('clear').onclick = () => { bet = 0; showBet(); };
+$('clear').onclick = () => { chips = []; bet = 0; showBet(); };
 
 $('deal').onclick = async () => {
   if (!inPhase('bet')) return;
   if (!bet) return toast('วางชิปเดิมพันก่อน');
   if (bet > wallet.get()) return toast('เครดิตไม่พอ', 'lose');
-  wallet.set(wallet.get() - bet); baseBet = bet;
+  wallet.set(wallet.get() - bet); baseBet = bet; baseChips = [...chips];
   setPhase('busy');
   hands = { p: [], d: [] }; meshes = { p: [], d: [] }; holeHidden = true;
   await give('p'); await give('d'); await give('p'); await give('d', false);
@@ -79,7 +79,7 @@ $('stand').onclick = () => { if (!inPhase('play')) return; setPhase('busy'); sta
 $('double').onclick = async () => {
   if (!inPhase('play')) return;
   setPhase('busy');
-  wallet.set(wallet.get() - bet); bet *= 2; showBet(); sfx.chip();
+  wallet.set(wallet.get() - bet); bet *= 2; chips = [...chips, ...chips]; showBet(); sfx.chip();
   await give('p');
   if (bjTotal(hands.p).total > 21) finish(); else stand();
 };
@@ -123,7 +123,8 @@ async function finish() {
   cards.forEach(m => scene.remove(m));
   extras.forEach(o => scene.remove(o)); extras = [];
   hands = { p: [], d: [] }; labels();
-  bet = Math.min(baseBet, wallet.get()); showBet();
+  if (baseBet <= wallet.get()) { chips = [...baseChips]; bet = baseBet; } else { chips = []; bet = 0; }
+  showBet();
   setPhase('bet');
 }
 showBet();

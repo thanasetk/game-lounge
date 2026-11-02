@@ -30,7 +30,7 @@ const pLabel = makeLabel(stage, [-1.8, 0.05, 0.05]);
 const bLabel = makeLabel(stage, [1.8, 0.05, 0.05]);
 const $ = id => document.getElementById(id);
 
-let shoe = newShoe(8), chip = 100, bets = { player: 0, tie: 0, banker: 0 }, stacks = {}, cards = [], road = [];
+let shoe = newShoe(8), chip = 100, bets = { player: 0, tie: 0, banker: 0 }, placed = { player: [], tie: [], banker: [] }, stacks = {}, cards = [], road = [];
 const draw = () => {
   if (shoe.length < 60) { shoe = newShoe(8); toast('สับไพ่ใหม่ 8 สำรับ'); }
   return shoe.pop();
@@ -39,18 +39,18 @@ const total = () => bets.player + bets.tie + bets.banker;
 
 function showStack(k) {
   if (stacks[k]) scene.remove(stacks[k]);
-  stacks[k] = chipStack(bets[k]); stacks[k].position.set(zoneX(k), 0, ZONE_Z); scene.add(stacks[k]);
+  stacks[k] = chipStack(placed[k]); stacks[k].position.set(zoneX(k), 0, ZONE_Z); scene.add(stacks[k]);
   $('bet').textContent = fmt(total());
 }
 function place(k) {
   if (document.body.dataset.phase !== 'bet') return;
   if (total() + chip > wallet.get()) return toast('เครดิตไม่พอ', 'lose');
-  bets[k] += chip; sfx.chip(); showStack(k);
+  bets[k] += chip; placed[k].push(chip); sfx.chip(); showStack(k);
 }
 
 chipBar($('chips'), v => (chip = v));
 for (const k of Object.keys(ZONES)) $('z-' + k).onclick = () => place(k);
-$('clear').onclick = () => { for (const k in bets) { bets[k] = 0; showStack(k); } };
+$('clear').onclick = () => { for (const k in bets) { bets[k] = 0; placed[k] = []; showStack(k); } };
 
 // click a printed bet zone on the felt
 const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), hit = new THREE.Vector3(), felt = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
@@ -117,7 +117,7 @@ async function settle(r) {
   await Promise.all(cards.map((m, i) => tween(m, { position: [-3.6, 0.02 + i * 0.004, -1.6], lift: 0.2 }, 450, i * 40)));
   cards.forEach(m => scene.remove(m)); cards = [];
   pLabel.textContent = bLabel.textContent = '';
-  if (total() > wallet.get()) for (const k in bets) bets[k] = 0; // keep the same bets for the next hand when affordable
+  if (total() > wallet.get()) for (const k in bets) { bets[k] = 0; placed[k] = []; } // keep the same bets for the next hand when affordable
   for (const k in bets) showStack(k);
   setPhase('bet');
 }

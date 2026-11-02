@@ -46,7 +46,7 @@ export function createStage({ cam = [0, 7.2, 7.4], target = [0, 0, 0.2], control
 
   const camera = new THREE.PerspectiveCamera(38, innerWidth / innerHeight, 0.02, 100);
   camera.position.set(...cam);
-  if (innerWidth < innerHeight) camera.position.set(cam[0], cam[1] * 1.2, cam[2] * 0.45); // portrait: look down more so the table fills the screen
+  if (innerWidth < innerHeight) camera.position.set(cam[0], cam[1] * 1.15, cam[2] * 0.75); // portrait: look down more so the table fills the screen
   let controls = null;
   if (useControls) {
     controls = new OrbitControls(camera, renderer.domElement);
@@ -247,22 +247,25 @@ function chipMaterials(v) {
   return (chipMats[v] = [side, top, top]);
 }
 export function makeChip(v) {
-  chipGeo ||= new THREE.CylinderGeometry(0.17, 0.17, 0.04, 48);
+  chipGeo ||= new THREE.CylinderGeometry(0.19, 0.19, 0.056, 48);
   const m = new THREE.Mesh(chipGeo, chipMaterials(v));
   m.castShadow = m.receiveShadow = true;
   m.rotation.y = Math.random() * 6.3;
   return m;
 }
+// amount: a number (paid out in the fewest chips) or the exact chips the player placed, so the stack grows one chip per click
 export function chipStack(amount) {
-  const g = new THREE.Group();
-  let y = 0.02, n = 0;
-  for (const v of [...CHIP_VALUES].reverse()) {
-    while (amount >= v && n < 24) {
-      const c = makeChip(v);
-      c.position.set((Math.random() - 0.5) * 0.014, y, (Math.random() - 0.5) * 0.014);
-      g.add(c); y += 0.042; amount -= v; n++;
-    }
+  let vals = amount;
+  if (!Array.isArray(amount)) {
+    vals = [];
+    for (const v of [...CHIP_VALUES].reverse()) while (amount >= v) { vals.push(v); amount -= v; }
   }
+  const g = new THREE.Group();
+  vals.slice(0, 80).forEach((v, n) => { // 20 chips per column, extra columns beside it
+    const c = makeChip(v);
+    c.position.set(Math.floor(n / 20) * 0.4 + (Math.random() - 0.5) * 0.014, 0.028 + (n % 20) * 0.058, (Math.random() - 0.5) * 0.014);
+    g.add(c);
+  });
   return g;
 }
 

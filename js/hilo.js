@@ -16,7 +16,7 @@ const shoeModel = makeShoe(); shoeModel.position.set(3.4, 0, -0.8); shoeModel.ro
 
 const SHOE = [3.3, 0.45, -0.4], CENTER = [0, 0.012, -0.26], POT_AT = [0, 0, 1.66];
 const $ = id => document.getElementById(id);
-let shoe = newShoe(1), bet = 0, pot = 0, current = null, curMesh = null, pile = [], potStack = null, streak = 0;
+let shoe = newShoe(1), bet = 0, chips = [], pot = 0, current = null, curMesh = null, pile = [], potStack = null, streak = 0;
 
 const draw = () => { if (!shoe.length) shoe = newShoe(1); return shoe.pop(); };
 function showPot(v) {
@@ -36,9 +36,9 @@ function refresh() {
 
 chipBar($('chips'), v => {
   if (bet + v > wallet.get()) return toast('เครดิตไม่พอ', 'lose');
-  bet += v; showPot(bet); refresh();
+  chips.push(v); bet += v; showPot(chips); refresh();
 });
-$('clear').onclick = () => { bet = 0; showPot(0); refresh(); };
+$('clear').onclick = () => { chips = []; bet = 0; showPot(chips); refresh(); };
 
 async function toPile(m) {
   pile.push(m);
@@ -94,7 +94,8 @@ async function endRound() {
   await wait(900);
   await toPile(curMesh);
   current = null; pot = 0;
-  bet = Math.min(bet, wallet.get()); showPot(bet); refresh();
+  if (bet > wallet.get()) { chips = []; bet = 0; }
+  showPot(chips); refresh();
   setPhase('bet');
 }
 refresh();
