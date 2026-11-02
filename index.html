@@ -22,9 +22,7 @@
   .game h2 { margin: 0; font-size: 22px; font-weight: 600; }
   .game p { margin: 0; color: var(--muted); font-size: 14px; flex: 1; }
   .game .go { color: var(--gold); font-weight: 600; font-size: 14px; }
-  .feat { margin-top: 40px; display: flex; flex-wrap: wrap; gap: 8px; }
-  .feat span { padding: 6px 12px; border-radius: 99px; border: 1px solid var(--line); color: var(--muted); font-size: 13px; background: var(--panel); }
-  footer { margin-top: 32px; color: var(--muted); font-size: 12px; }
+  footer { margin-top: 40px; color: var(--muted); font-size: 12px; }
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 </head>
@@ -32,14 +30,13 @@
 <main>
   <div class="brand">ROYAL LOUNGE</div>
   <h1>เกมโต๊ะ <span>3 มิติ</span><br>เล่นได้ทันทีบนเว็บ</h1>
-  <p class="lead">เดโม่เกมไพ่และพูลแบบ 3D เรนเดอร์สด ใช้ได้ทั้งคอมและมือถือ ไม่ต้องติดตั้งแอป · เครดิตในเดโม่เป็นเครดิตจำลอง <b data-balance style="color:var(--gold)"></b></p>
+  <p class="lead">เกมไพ่และพูลแบบ 3D ใช้ได้ทั้งคอมและมือถือ ไม่ต้องติดตั้งแอป · เครดิตในเดโม่เป็นเครดิตจำลอง <b data-balance style="color:var(--gold)"></b></p>
   <div class="grid">
     <a class="game" href="pool.html"><div class="ico">🎱</div><h2>Pool 3D</h2><p>โต๊ะพูล 9 ฟุตขนาดจริง ฟิสิกส์ลูกชนลูก กระดอนขอบ ไม้คิวและเส้นเล็งพร้อมลูกเงา</p><div class="go">เล่นเลย →</div></a>
     <a class="game" href="blackjack.html"><div class="ico">🂡</div><h2>Blackjack</h2><p>จั่ว หยุด ดับเบิล · เจ้ามือหยุดที่ 17 · Blackjack จ่าย 3:2 · ชิปและไพ่ 3D</p><div class="go">เล่นเลย →</div></a>
     <a class="game" href="baccarat.html"><div class="ico">♦️</div><h2>Baccarat</h2><p>PLAYER / BANKER / TIE · กติกาไพ่ใบที่ 3 แบบ Punto Banco · มีเค้าไพ่ (Bead road)</p><div class="go">เล่นเลย →</div></a>
     <a class="game" href="hilo.html"><div class="ico">⇅</div><h2>Hi-Lo</h2><p>ทายไพ่ใบถัดไปสูงหรือต่ำ อัตราจ่ายคำนวณจากโอกาสจริง เก็บเงินได้ทุกเมื่อ</p><div class="go">เล่นเลย →</div></a>
   </div>
-  <div class="feat"><span>Three.js / WebGL</span><span>โมเดล 3D สร้างด้วยโค้ด ไม่ต้องโหลดไฟล์ใหญ่</span><span>เงาและแสงสะท้อนแบบ PBR</span><span>รองรับมือถือ</span><span>เสียงสังเคราะห์</span></div>
   <footer>เดโม่สำหรับนำเสนอ · ไม่มีการใช้เงินจริง</footer>
 </main>
 <script type="module">
