@@ -151,7 +151,7 @@ function rack() {
 // ---------- physics ----------
 function pot(b, pk) {
   b.live = false; b.v.set(0, 0); sfx.thud(1);
-  tween(b.mesh, { position: [pk.x, -0.05, pk.y], scale: 0.5 }, 260).then(() => (b.mesh.visible = false));
+  b.sinking = tween(b.mesh, { position: [pk.x, -0.05, pk.y], scale: 0.5 }, 260).then(() => { if (!b.live) b.mesh.visible = false; });
   if (b.n) { potted.push(b.n); hud(); } else scratch = true;
 }
 function step(dt) {
@@ -208,10 +208,12 @@ function roll(dt) {
 function endOfShot() {
   if (scratch) {
     scratch = false;
-    cue.p.set(-HX / 2, 0);
-    while (balls.some(b => b !== cue && b.live && b.p.distanceTo(cue.p) < 2.2 * R)) cue.p.y += 2.2 * R;
-    cue.live = true; cue.mesh.visible = true; cue.mesh.scale.setScalar(1);
-    cue.mesh.position.set(cue.p.x, R, cue.p.y);
+    cue.sinking.then(() => { // wait for the drop animation, or it would hide the re-spotted ball
+      cue.p.set(-HX / 2, 0);
+      while (balls.some(b => b !== cue && b.live && b.p.distanceTo(cue.p) < 2.2 * R)) cue.p.y += 2.2 * R;
+      cue.live = true; cue.mesh.visible = true; cue.mesh.scale.setScalar(1);
+      cue.mesh.position.set(cue.p.x, R, cue.p.y);
+    });
     toast('ลูกขาวลงหลุม — วางใหม่ที่หัวโต๊ะ', 'lose');
   }
   if (potted.length === 15) toast(`เคลียร์โต๊ะใน ${shots} ไม้!`, 'win');
