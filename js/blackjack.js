@@ -1,4 +1,4 @@
-import { createStage, makeCardTable, makeShoe, dealCard, flip, chipStack, chipBar, tween, wait, wallet, fmt, makeLabel, toast, setPhase, sfx } from './kit.js';
+import { tutorial, createStage, makeCardTable, makeShoe, dealCard, flip, chipStack, chipBar, tween, wait, wallet, fmt, makeLabel, toast, setPhase, sfx } from './kit.js';
 import { newShoe, bjTotal, isBlackjack } from './rules.js';
 
 const stage = createStage();
@@ -128,3 +128,10 @@ async function finish() {
   setPhase('bet');
 }
 showBet();
+tutorial('blackjack', [
+  ['เป้าหมาย', 'ทำแต้มให้ <b>ใกล้ 21 ที่สุดโดยไม่เกิน</b> และสูงกว่าเจ้ามือ ถ้าเกิน 21 แพ้ทันที'],
+  ['นับแต้มไพ่', 'ไพ่ 2–10 นับตามหน้าไพ่ · <b>J Q K = 10</b> · <b>A = 1 หรือ 11</b> ระบบเลือกค่าที่ดีกว่าให้เอง (ป้ายแสดงเช่น 7 / 17)'],
+  ['วางเดิมพัน', 'กดชิปด้านล่างเพื่อวางเดิมพัน (กดซ้ำเพิ่มได้ · “ล้าง” เพื่อเริ่มใหม่) แล้วกด <b>แจกไพ่</b>'],
+  ['ตาของคุณ', '<b>จั่ว (Hit)</b> รับไพ่เพิ่ม · <b>หยุด (Stand)</b> พอแล้ว · <b>ดับเบิล</b> เพิ่มเดิมพันเท่าตัวแล้วรับไพ่อีกใบเดียว (ใช้ได้ตอนมี 2 ใบ)'],
+  ['เจ้ามือและการจ่าย', 'เจ้ามือต้องจั่วจนได้ 17 ขึ้นไป · ชนะจ่าย <b>1 : 1</b> · <b>Blackjack</b> (A + ไพ่ 10 แต้ม จาก 2 ใบแรก) จ่าย <b>3 : 2</b> · แต้มเท่ากันคืนเงิน'],
+]);

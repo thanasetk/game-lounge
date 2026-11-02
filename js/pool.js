@@ -1,4 +1,4 @@
-import { THREE, createStage, canvas, toTex, tween, toast, sfx } from './kit.js';
+import { THREE, createStage, canvas, toTex, tween, toast, sfx, panel, tutorial } from './kit.js';
 
 // Real 9-ft table in metres: play area 2.54 x 1.27, ball Ø 57 mm
 const R = 0.0286, HX = 1.27, HZ = 0.635, MAXV = 4.6, DECEL = 0.28, DRAG = 0.25, CUSHION = 0.78, SUB = 8;
@@ -123,7 +123,7 @@ const cue = balls[0];
 
 // ---------- HUD ----------
 const $ = id => document.getElementById(id);
-let shots = 0, potted = [], scratch = false, moving = false;
+let shots = 0, potted = [], scratch = false, moving = false, gameOver = false;
 function hud() {
   $('shots').textContent = shots;
   $('left').textContent = 15 - potted.length;
@@ -145,7 +145,7 @@ function rack() {
     b.mesh.quaternion.setFromEuler(new THREE.Euler(Math.random() * 6, Math.random() * 6, Math.random() * 6));
     b.mesh.position.set(b.p.x, R, b.p.y);
   }
-  shots = 0; potted = []; scratch = false; hud();
+  shots = 0; potted = []; scratch = false; gameOver = false; hud();
 }
 
 // ---------- physics ----------
@@ -206,17 +206,29 @@ function roll(dt) {
 }
 
 function endOfShot() {
+  if (potted.includes(8) && (potted.length < 15 || scratch))
+    return over(false, potted.length < 15 ? 'ลูก 8 ลงก่อนเคลียร์ลูกอื่น' : 'ลูกขาวลงตามลูก 8');
+  if (potted.length === 15) return over(true);
   if (scratch) {
-    scratch = false;
+    scratch = false; shots++; hud(); // foul: costs one extra shot
     cue.sinking.then(() => { // wait for the drop animation, or it would hide the re-spotted ball
       cue.p.set(-HX / 2, 0);
       while (balls.some(b => b !== cue && b.live && b.p.distanceTo(cue.p) < 2.2 * R)) cue.p.y += 2.2 * R;
       cue.live = true; cue.mesh.visible = true; cue.mesh.scale.setScalar(1);
       cue.mesh.position.set(cue.p.x, R, cue.p.y);
     });
-    toast('ลูกขาวลงหลุม — วางใหม่ที่หัวโต๊ะ', 'lose');
+    toast('ฟาวล์! ลูกขาวลงหลุม +1 ไม้ — วางใหม่ที่หัวโต๊ะ', 'lose');
   }
-  if (potted.length === 15) toast(`เคลียร์โต๊ะใน ${shots} ไม้!`, 'win');
+}
+
+function over(win, why) {
+  gameOver = true;
+  let best = 0;
+  try { best = +localStorage.getItem('pool-best') || 0; if (win && (!best || shots < best)) localStorage.setItem('pool-best', shots); } catch {}
+  const body = !win ? `ลูก 8 (สีดำ) ต้องลงเป็นลูกสุดท้าย · คุณเก็บไปได้ <b>${potted.filter(n => n !== 8).length} / 14</b> ลูก`
+    : !best || shots < best ? 'สถิติใหม่ของคุณ 🎉' : `สถิติดีที่สุดของคุณคือ <b>${best}</b> ไม้`;
+  panel({ step: 'จบเกม', title: win ? `เคลียร์โต๊ะใน ${shots} ไม้!` : `แพ้ — ${why}`, body,
+    actions: [{ label: 'เล่นใหม่', kind: 'primary', onClick: rack }] });
 }
 
 // ---------- aiming: cue stick, guide line, ghost ball ----------
@@ -245,7 +257,7 @@ const aim = new THREE.Vector2(1, 0), UP = new THREE.Vector3(0, 1, 0), back = new
 let charging = false, chargeT = 0, power = 0;
 
 function updateAim() {
-  const show = !moving && cue.live;
+  const show = !moving && cue.live && !gameOver;
   stick.visible = guide.visible = ghost.visible = show;
   if (!show) return;
   back.set(-aim.x, Math.sin(0.09), -aim.y).normalize();
@@ -291,7 +303,7 @@ el.addEventListener('pointermove', e => { if (!moving && pointers.size <= 1) aim
 el.addEventListener('pointerdown', e => {
   pointers.add(e.pointerId);
   if (pointers.size > 1) { charging = false; return; } // two fingers = camera
-  if (e.button !== 0 || moving || !cue.live) return;
+  if (e.button !== 0 || moving || !cue.live || gameOver) return;
   aimAt(e); charging = true; chargeT = 0; power = 0;
 });
 const release = e => {
@@ -322,3 +334,9 @@ $('rack').onclick = () => { moving = false; rack(); };
 let top = false;
 $('view').onclick = () => { top = !top; tween(camera, { position: top ? CAM_TOP : CAM_PLAY }, 700); $('view').textContent = top ? 'มุมเล่น' : 'มุมบน'; };
 rack();
+tutorial('pool', [
+  ['เป้าหมาย', 'แทงลูก 1–15 ลงหลุมให้ <b>หมดโต๊ะ</b> โดยใช้จำนวนไม้ให้น้อยที่สุด · มุมขวาบนนับไม้ที่แทงและลูกที่เหลือ'],
+  ['เล็งและแทง', 'ชี้เมาส์ (หรือแตะ) ไปทางที่จะแทง · <b>เส้นประและลูกเงา</b> บอกจุดที่ลูกขาวจะชน · <b>กดค้าง</b> เพื่อชาร์จแรง (ดูแถบแรง) แล้ว <b>ปล่อย</b> เพื่อแทง'],
+  ['กติกา', '<b>ลูก 8 (สีดำ) ต้องลงเป็นลูกสุดท้าย</b> ถ้าลงก่อน = แพ้ · <b>ลูกขาวลงหลุม = ฟาวล์</b> นับเพิ่ม 1 ไม้ แล้ววางลูกขาวใหม่ที่หัวโต๊ะ'],
+  ['มุมกล้อง', '<b>คลิกขวาลาก</b> หมุนกล้อง · <b>ล้อเมาส์</b> ซูม · ปุ่ม <b>มุมบน</b> ดูจากด้านบน · มือถือใช้ <b>สองนิ้ว</b> หมุน/ซูม'],
+]);

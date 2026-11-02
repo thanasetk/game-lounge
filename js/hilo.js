@@ -1,4 +1,4 @@
-import { createStage, makeCardTable, makeShoe, dealCard, flip, chipStack, chipBar, tween, wait, wallet, fmt, toast, setPhase, sfx } from './kit.js';
+import { tutorial, createStage, makeCardTable, makeShoe, dealCard, flip, chipStack, chipBar, tween, wait, wallet, fmt, toast, setPhase, sfx } from './kit.js';
 import { newShoe, hiloRank, hiloOdds } from './rules.js';
 
 const stage = createStage();
@@ -99,3 +99,9 @@ async function endRound() {
   setPhase('bet');
 }
 refresh();
+tutorial('hilo', [
+  ['เป้าหมาย', 'ทายว่าไพ่ใบถัดไปจะ <b>สูงกว่า</b> หรือ <b>ต่ำกว่า</b> ใบที่เปิดอยู่'],
+  ['ลำดับไพ่', '<b>A ต่ำสุด</b> → 2 … 10 → J → Q → <b>K สูงสุด</b> · ดอกไม่มีผล · ไพ่เท่ากันถือว่าเสมอ ทายต่อได้'],
+  ['อัตราจ่าย', 'ตัวคูณบนปุ่มคำนวณจากโอกาสจริง ทายยากจ่ายมาก · ทายถูกแล้ว <b>กองกลางคูณขึ้นเรื่อยๆ</b>'],
+  ['เก็บเงินหรือเสี่ยงต่อ', 'กด <b>เก็บเงิน</b> ได้ทุกเมื่อเพื่อรับกองกลาง · ถ้าทายผิด <b>เสียกองกลางทั้งหมด</b>'],
+]);

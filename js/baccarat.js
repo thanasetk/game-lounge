@@ -1,4 +1,4 @@
-import { THREE, createStage, makeCardTable, makeShoe, dealCard, flip, chipStack, chipBar, tween, wait, wallet, fmt, makeLabel, toast, setPhase, sfx } from './kit.js';
+import { THREE, tutorial, createStage, makeCardTable, makeShoe, dealCard, flip, chipStack, chipBar, tween, wait, wallet, fmt, makeLabel, toast, setPhase, sfx } from './kit.js';
 import { newShoe, playBaccarat, bacPoint } from './rules.js';
 
 const stage = createStage();
@@ -122,3 +122,10 @@ async function settle(r) {
   setPhase('bet');
 }
 for (const k in bets) showStack(k);
+tutorial('baccarat', [
+  ['เป้าหมาย', 'ทายว่าฝั่ง <b>PLAYER</b> หรือ <b>BANKER</b> จะได้แต้มใกล้ <b>9</b> มากกว่า หรือจะ <b>เสมอ (TIE)</b> · คุณไม่ต้องตัดสินใจจั่วเอง'],
+  ['นับแต้ม', '<b>A = 1</b> · 2–9 ตามหน้าไพ่ · <b>10 J Q K = 0</b> · รวมแล้วนับแค่หลักหน่วย เช่น 7 + 8 = 15 → <b>5 แต้ม</b>'],
+  ['ไพ่ใบที่ 3', 'ระบบจั่วให้อัตโนมัติตามกติกามาตรฐาน · ถ้า 2 ใบแรกได้ <b>8 หรือ 9</b> เรียกว่า <b>Natural</b> จบตาทันที'],
+  ['วิธีแทง', 'เลือกชิป แล้วกด <b>PLAYER / TIE / BANKER</b> (หรือคลิกช่องบนโต๊ะ) แทงได้หลายช่อง แล้วกด <b>แจกไพ่</b>'],
+  ['การจ่าย', 'PLAYER <b>1 : 1</b> · BANKER <b>0.95 : 1</b> (หักคอม 5%) · TIE <b>8 : 1</b> และถ้าเสมอ เดิมพัน PLAYER/BANKER ได้คืน · มุมซ้ายบนคือเค้าไพ่ย้อนหลัง'],
+]);

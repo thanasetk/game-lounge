@@ -372,3 +372,35 @@ export const sfx = {
   ball: v => noise(0.03, 2600, Math.min(1, v) * 0.9),
   thud: v => noise(0.06, 500, Math.min(1, v) * 0.8),
 };
+
+// ---------- dialogs: game-over panel and skippable how-to-play tour ----------
+export function panel({ step = '', title, body, actions }) {
+  const wrap = document.body.appendChild(Object.assign(document.createElement('div'), { className: 'panel-wrap' }));
+  wrap.innerHTML = `<div class="panel" role="dialog" aria-modal="true"><div class="step">${step}</div><h2>${title}</h2><p>${body}</p><div class="acts"></div></div>`;
+  for (const a of actions) {
+    const b = Object.assign(document.createElement('button'), { textContent: a.label, className: a.kind || '' });
+    b.onclick = () => { wrap.remove(); a.onClick?.(); };
+    wrap.querySelector('.acts').append(b);
+  }
+  wrap.querySelector('.acts button:last-child').focus();
+  return wrap;
+}
+
+// steps: [[title, body html], ...]; shown on the first visit, reopened with the "? วิธีเล่น" button
+export function tutorial(id, steps) {
+  const key = 'tut-' + id;
+  const done = () => { try { localStorage.setItem(key, '1'); } catch {} };
+  const show = (i = 0) => panel({
+    step: `วิธีเล่น ${i + 1} / ${steps.length}`, title: steps[i][0], body: steps[i][1],
+    actions: [
+      { label: 'ข้ามการสอน', kind: 'ghost', onClick: done },
+      ...(i ? [{ label: '← ย้อนกลับ', onClick: () => show(i - 1) }] : []),
+      i < steps.length - 1 ? { label: 'ถัดไป →', kind: 'primary', onClick: () => show(i + 1) } : { label: 'เริ่มเล่น', kind: 'primary', onClick: done },
+    ],
+  });
+  const btn = Object.assign(document.createElement('button'), { className: 'pill helpbtn', innerHTML: '? <span>วิธีเล่น</span>', onclick: () => show() });
+  document.querySelector('.hud .bal')?.before(btn);
+  let seen = false;
+  try { seen = !!localStorage.getItem(key); } catch {}
+  if (!seen) show();
+}
