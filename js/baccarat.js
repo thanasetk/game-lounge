@@ -103,7 +103,7 @@ async function settle(r) {
     if (!pay[k]) { moves.push(tween(stacks[k], { position: [0, 0, -2.3], lift: 0.4 }, 550)); continue; }
     if (pay[k] > bets[k]) {
       const win = chipStack(pay[k] - bets[k]); win.position.set(0, 0, -2.2); scene.add(win); cards.push(win);
-      moves.push(tween(win, { position: [zoneX(k) + 0.4, 0, ZONE_Z], lift: 0.4 }, 550));
+      moves.push(tween(win, { position: [zoneX(k), 0, ZONE_Z + 0.5], lift: 0.4 }, 550));
     }
   }
   if (moves.length) sfx.chip();

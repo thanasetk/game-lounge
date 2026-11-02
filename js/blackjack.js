@@ -110,7 +110,7 @@ async function finish() {
   await wait(300);
   if (pay > bet) {
     const win = chipStack(pay - bet); win.position.set(0, 0, -2.2); scene.add(win); extras.push(win); sfx.chip();
-    await tween(win, { position: [0.45, 0, 1.56], lift: 0.4 }, 550);
+    await tween(win, { position: [1.35, 0, 1.56], lift: 0.4 }, 550);
   } else if (!pay) {
     sfx.chip(); await tween(betStack, { position: [0, 0, -2.3], lift: 0.4 }, 550);
   }

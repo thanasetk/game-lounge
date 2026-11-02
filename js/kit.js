@@ -260,11 +260,20 @@ export function chipStack(amount) {
     vals = [];
     for (const v of [...CHIP_VALUES].reverse()) while (amount >= v) { vals.push(v); amount -= v; }
   }
-  const g = new THREE.Group();
-  vals.slice(0, 80).forEach((v, n) => { // 20 chips per column, extra columns beside it
-    const c = makeChip(v);
-    c.position.set(Math.floor(n / 20) * 0.4 + (Math.random() - 0.5) * 0.014, 0.028 + (n % 20) * 0.058, (Math.random() - 0.5) * 0.014);
-    g.add(c);
+  // one stack per denomination like a real table (highest value first), max 20 chips per stack
+  const cols = [];
+  for (const v of [...CHIP_VALUES].reverse()) {
+    const n = vals.filter(x => x === v).length;
+    for (let i = 0; i < n; i += 20) cols.push({ v, n: Math.min(20, n - i) });
+  }
+  const g = new THREE.Group(), perRow = Math.min(3, cols.length);
+  cols.slice(0, 9).forEach(({ v, n }, i) => { // up to 3 stacks per row, extra rows behind
+    const x = (i % 3 - (perRow - 1) / 2) * 0.4, z = -Math.floor(i / 3) * 0.4;
+    for (let k = 0; k < n; k++) {
+      const c = makeChip(v);
+      c.position.set(x + (Math.random() - 0.5) * 0.014, 0.028 + k * 0.058, z + (Math.random() - 0.5) * 0.014);
+      g.add(c);
+    }
   });
   return g;
 }
