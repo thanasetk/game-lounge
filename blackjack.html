@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blackjack 3D · Royal Lounge</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body data-phase="bet">
+<header class="hud"><a class="back" href="./">← เมนูเกม</a><h1>BLACKJACK</h1><div class="pill bal">เครดิต <b data-balance></b></div></header>
+<div class="dock">
+  <div class="row phase-bet" id="chips"></div>
+  <div class="row phase-bet"><span class="info">เดิมพัน <b id="bet">0</b></span><button class="ghost" id="clear">ล้าง</button><button class="primary" id="deal">แจกไพ่</button></div>
+  <div class="row phase-play"><button class="primary" id="hit">จั่ว (Hit)</button><button id="stand">หยุด (Stand)</button><button id="double">ดับเบิล</button></div>
+</div>
+<div class="help">กดชิปเพื่อวางเดิมพัน แล้วกด “แจกไพ่” · ลากเมาส์เพื่อหมุนมุมกล้อง · เจ้ามือหยุดที่ 17 · Blackjack จ่าย 3:2</div>
+<script type="module" src="js/blackjack.js"></script>
+</body>
+</html>

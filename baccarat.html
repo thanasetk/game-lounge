@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Baccarat 3D · Royal Lounge</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .zone { min-width: 96px; font-weight: 600; }
+  #z-player { border-color: #5ab0ff; color: #9fd0ff; }
+  #z-tie { border-color: #7ee08a; color: #a9f0b2; }
+  #z-banker { border-color: #ff7a7a; color: #ffb0b0; }
+  .road { position: fixed; left: 16px; top: 64px; display: grid; grid-template-columns: repeat(6, 24px); gap: 4px; padding: 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; z-index: 2; }
+  .road:empty { display: none; }
+  .road i { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-size: 12px; font-weight: 600; color: #fff; }
+  .b-P { background: #2f7fd6; } .b-B { background: #d23c3c; } .b-T { background: #2f9a48; }
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body data-phase="bet">
+<header class="hud"><a class="back" href="./">← เมนูเกม</a><h1>BACCARAT</h1><div class="pill bal">เครดิต <b data-balance></b></div></header>
+<div class="road" id="road"></div>
+<div class="dock">
+  <div class="row phase-bet" id="chips"></div>
+  <div class="row phase-bet">
+    <button class="zone" id="z-player">PLAYER</button><button class="zone" id="z-tie">TIE</button><button class="zone" id="z-banker">BANKER</button>
+  </div>
+  <div class="row phase-bet"><span class="info">เดิมพันรวม <b id="bet">0</b></span><button class="ghost" id="clear">ล้าง</button><button class="primary" id="deal">แจกไพ่</button></div>
+</div>
+<div class="help">เลือกชิป แล้วกดช่อง PLAYER / TIE / BANKER (หรือคลิกบนโต๊ะ) · ไพ่ใบที่ 3 จั่วตามกติกา Punto Banco · BANKER หักค่าคอม 5%</div>
+<script type="module" src="js/baccarat.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hi-Lo 3D · Royal Lounge</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body data-phase="bet">
+<header class="hud"><a class="back" href="./">← เมนูเกม</a><h1>HI-LO</h1><div class="pill bal">เครดิต <b data-balance></b></div></header>
+<div class="dock">
+  <div class="row phase-bet" id="chips"></div>
+  <div class="row phase-bet"><span class="info">เดิมพัน <b id="bet">0</b></span><button class="ghost" id="clear">ล้าง</button><button class="primary" id="start">เริ่มเกม</button></div>
+  <div class="row phase-play"><span class="info">กองกลาง <b id="pot">0</b> · ถูกติดกัน <b id="streak">0</b></span></div>
+  <div class="row phase-play"><button class="primary" id="hi">สูงกว่า</button><button class="primary" id="lo">ต่ำกว่า</button><button id="cash">เก็บเงิน</button></div>
+</div>
+<div class="help">ทายว่าไพ่ใบถัดไปจะ “สูงกว่า” หรือ “ต่ำกว่า” · ทายถูกกองกลางคูณตามโอกาส · เก็บเงินได้ทุกเมื่อ · ไพ่เท่ากันถือว่าเสมอ</div>
+<script type="module" src="js/hilo.js"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pool 3D · Royal Lounge</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .meter { width: min(320px, 70vw); height: 12px; border-radius: 99px; background: #0008; border: 1px solid var(--line); overflow: hidden; }
+  #power { height: 100%; width: 0; background: linear-gradient(90deg, #4ade80, #facc15, #ef4444); }
+  .tray { display: flex; gap: 4px; min-height: 26px; flex-wrap: wrap; justify-content: center; }
+  .tray:empty::before { content: 'ลูกที่ลงหลุมจะแสดงที่นี่'; color: var(--muted); font-size: 13px; }
+  .tray i { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 600 11px Arial, sans-serif; color: #111; font-style: normal;
+    background: radial-gradient(circle at 50% 50%, #fff 0 38%, var(--c) 40%); box-shadow: inset -3px -4px 6px #0006; }
+  .tray i.st { background: radial-gradient(circle at 50% 50%, #fff 0 38%, transparent 40%), linear-gradient(#f4efe2 0 22%, var(--c) 22% 78%, #f4efe2 78%); }
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+<header class="hud"><a class="back" href="./">← เมนูเกม</a><h1>POOL · 8-BALL PRACTICE</h1><div class="pill bal">ไม้ที่แทง <b id="shots">0</b> · เหลือ <b id="left">15</b></div></header>
+<div class="dock">
+  <div class="row"><div class="tray" id="tray"></div></div>
+  <div class="row"><span class="info">แรง</span><div class="meter"><div id="power"></div></div><button id="view">มุมบน</button><button class="ghost" id="rack">จัดโต๊ะใหม่</button></div>
+</div>
+<div class="help">ชี้เมาส์เพื่อเล็ง · กดค้างเพื่อชาร์จแรง ปล่อยเพื่อแทง · คลิกขวาลาก = หมุนกล้อง · ล้อเมาส์ = ซูม · มือถือ: แตะค้างแล้วปล่อย, สองนิ้ว = กล้อง</div>
+<script type="module" src="js/pool.js"></script>
+</body>
+</html>
