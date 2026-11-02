@@ -46,6 +46,7 @@ export function createStage({ cam = [0, 7.2, 7.4], target = [0, 0, 0.2], control
 
   const camera = new THREE.PerspectiveCamera(38, innerWidth / innerHeight, 0.02, 100);
   camera.position.set(...cam);
+  if (innerWidth < innerHeight) camera.position.set(cam[0], cam[1] * 1.2, cam[2] * 0.45); // portrait: look down more so the table fills the screen
   let controls = null;
   if (useControls) {
     controls = new OrbitControls(camera, renderer.domElement);
@@ -56,8 +57,8 @@ export function createStage({ cam = [0, 7.2, 7.4], target = [0, 0, 0.2], control
   } else camera.lookAt(...target);
 
   if (lights) {
-    scene.add(new THREE.HemisphereLight(0xfff4e0, 0x202030, 0.5));
-    const spot = new THREE.SpotLight(0xfff0d8, 500, 30, 0.75, 0.6, 2);
+    scene.add(new THREE.HemisphereLight(0xfff4e0, 0x202030, 0.22));
+    const spot = new THREE.SpotLight(0xfff0d8, 260, 30, 0.7, 0.7, 2);
     spot.position.set(0, 9, 2);
     spot.castShadow = true;
     spot.shadow.mapSize.set(2048, 2048);
@@ -189,8 +190,8 @@ function getCardGeo() {
 // Card lies flat, face up (+Y). Face down = rotation z = PI.
 export function makeCard(card) {
   const key = card.r + card.s;
-  if (!faceMats.has(key)) faceMats.set(key, new THREE.MeshStandardMaterial({ map: toTex(faceCanvas(card)), roughness: 0.38 }));
-  backMat ||= new THREE.MeshStandardMaterial({ map: toTex(backCanvas()), roughness: 0.3, metalness: 0.15 });
+  if (!faceMats.has(key)) faceMats.set(key, new THREE.MeshStandardMaterial({ map: toTex(faceCanvas(card)), roughness: 0.55, envMapIntensity: 0.35 }));
+  backMat ||= new THREE.MeshStandardMaterial({ map: toTex(backCanvas()), roughness: 0.45, metalness: 0.1, envMapIntensity: 0.5 });
   const grp = new THREE.Group();
   const front = new THREE.Mesh(getCardGeo(), faceMats.get(key));
   front.rotation.x = -Math.PI / 2; front.position.y = 0.002;
@@ -272,7 +273,7 @@ export function makeCardTable({ w = 9, h = 5.2, print } = {}) {
   const [c, g] = canvas(2048, Math.round(2048 * h / w));
   const W = c.width, H = c.height;
   const grd = g.createRadialGradient(W / 2, H * 0.45, 40, W / 2, H / 2, W * 0.62);
-  grd.addColorStop(0, '#14814f'); grd.addColorStop(1, '#05341f');
+  grd.addColorStop(0, '#0f6b41'); grd.addColorStop(1, '#042a19');
   g.fillStyle = grd; g.fillRect(0, 0, W, H);
   const img = g.getImageData(0, 0, W, H), d = img.data;
   for (let i = 0; i < d.length; i += 4) { const n = (Math.random() - 0.5) * 14; d[i] += n; d[i + 1] += n; d[i + 2] += n; }
